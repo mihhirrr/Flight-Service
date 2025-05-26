@@ -11,10 +11,12 @@ module.exports = {
       },
       ModelNo: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       Capacity: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

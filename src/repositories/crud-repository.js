@@ -6,6 +6,7 @@ class CrudFunctions {
   async create(data) {
     try {
       const response = await this.model.create(data);
+      console.log(data);
       return response;
     } catch (error) {
       console.log(
@@ -17,7 +18,8 @@ class CrudFunctions {
 
   async find(id) {
     try {
-      const response = await this.model.findByPK(id);
+      console.log(id);
+      const response = await this.model.findByPk(id);
       return response;
     } catch (error) {
       console.log(
@@ -57,8 +59,11 @@ class CrudFunctions {
 
   async delete(id) {
     try {
+      console.log(typeof id);
       const response = await this.model.destroy({
-        id,
+        where: {
+          id,
+        },
       });
       return response;
     } catch (error) {
