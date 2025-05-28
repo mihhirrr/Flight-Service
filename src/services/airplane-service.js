@@ -1,4 +1,6 @@
 const { AirplaneRepository } = require("../repositories");
+const AppError = require("../utils/Error-handler/AppError");
+const { StatusCodes } = require("http-status-codes");
 
 const airplaneRepository = new AirplaneRepository();
 
@@ -7,6 +9,9 @@ const createAirplane = async (data) => {
     const createdAirplane = await airplaneRepository.create(data);
     return createdAirplane;
   } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      throw new AppError(error.message, StatusCodes.BAD_REQUEST);
+    }
     console.log("There was an error while creating the airplane");
     throw error;
   }
@@ -17,7 +22,6 @@ const updateAirplane = async (id, data) => {
     const updatedAirplane = await airplaneRepository.update(id, data);
     return updatedAirplane;
   } catch (error) {
-    console.log("There was an error while updating the airplane");
     throw error;
   }
 };
@@ -27,7 +31,6 @@ const deleteAirplane = async (id) => {
     const deletedAirplane = await airplaneRepository.delete(id);
     return deletedAirplane;
   } catch (error) {
-    console.log("There was an error while deleting the airplane");
     throw error;
   }
 };
@@ -37,7 +40,9 @@ const getAllAirplanes = async () => {
     const getAllAirplanes = await airplaneRepository.findAll();
     return getAllAirplanes;
   } catch (error) {
-    console.log("There was an error while retrieving the airplanes");
+    if(error.name == 'TypeError'){
+      throw new AppError('Something went wrong!', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
     throw error;
   }
 };
@@ -47,7 +52,6 @@ const getAirplaneById = async (id) => {
     const RetrievedAirplane = await airplaneRepository.find(id);
     return RetrievedAirplane;
   } catch (error) {
-    console.log("There was an error while retrieving the airplane");
     throw error;
   }
 };

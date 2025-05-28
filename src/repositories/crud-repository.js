@@ -1,3 +1,6 @@
+const AppError = require("../utils/Error-handler/AppError");
+const { StatusCodes } = require("http-status-codes");
+
 class CrudFunctions {
   constructor(model) {
     this.model = model;
@@ -9,22 +12,21 @@ class CrudFunctions {
       console.log(data);
       return response;
     } catch (error) {
-      console.log(
-        "There was an error while inserting the data in " + this.model
-      );
       throw error;
     }
   }
 
   async find(id) {
     try {
-      console.log(id);
       const response = await this.model.findByPk(id);
+      if (!response) {
+        throw new AppError(
+          `Resource not found for the ID ${id}`,
+          StatusCodes.NOT_FOUND
+        );
+      }
       return response;
     } catch (error) {
-      console.log(
-        "There was an error while retrieving the data from " + this.model
-      );
       throw error;
     }
   }
@@ -48,6 +50,13 @@ class CrudFunctions {
           id,
         },
       });
+      if (!response[0]) {
+        console.log(response);
+        throw new AppError(
+          `Resource not found for the ID ${id}`,
+          StatusCodes.NOT_FOUND
+        );
+      }
       return response;
     } catch (error) {
       console.log(
@@ -65,11 +74,14 @@ class CrudFunctions {
           id,
         },
       });
+      if (!response) {
+        throw new AppError(
+          `Resource not found for the ID ${id}`,
+          StatusCodes.NOT_FOUND
+        );
+      }
       return response;
     } catch (error) {
-      console.log(
-        "There was an error while retrieving the data from " + this.model
-      );
       throw error;
     }
   }
