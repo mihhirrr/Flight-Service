@@ -1,14 +1,15 @@
 const express = require("express");
 const app = express();
 const ServerConfig = require("./src/config/server-config.js");
-const { AirplaneRouter, CityRouter } = require("./src/routes");
-const { City } = require('./src/models')
-
+const { AirplaneRouter, CityRouter, AirportRouter , FlightRouter} = require("./src/routes");
+  
 app.use(express.json());
 app.use(express.urlencoded());
 
 app.use("/api/airplanes", AirplaneRouter);
 app.use("/api/cities", CityRouter);
+app.use("/api/airports", AirportRouter);
+app.use("/api/flights", FlightRouter);
 
 app.listen(ServerConfig.PORT, async () => {
   console.log("Server is listening on port " + ServerConfig.PORT);

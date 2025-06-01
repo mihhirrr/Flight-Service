@@ -51,7 +51,7 @@ class CrudFunctions {
         },
       });
       if (!response[0]) {
-        console.log(response);
+        // console.log(response);
         throw new AppError(
           `Resource not found for the ID ${id}`,
           StatusCodes.NOT_FOUND
