@@ -17,9 +17,17 @@ const createFlight = async (data) => {
     }
   };
 
-
+const getFlights = async (query)=>{
+  try {
+    const filteredFlights = await flightsRepository.getFlights(query);
+    return filteredFlights;
+  } catch (error) {
+    throw error
+  }
+}
 
 
 module.exports = {
     createFlight,
+    getFlights
 }
