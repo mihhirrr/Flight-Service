@@ -1,6 +1,7 @@
 const { FlightService } = require("../services");
 const { StatusCodes } = require("http-status-codes");
 const { Error, Success } = require("../utils/common-utils");
+const { CustomFilter } = require('../utils/Filter-helper')
 
 async function createFlight(req, res, next) {
   const { flightNumber, airplaneId, departureAirportCode, arrivalAirportCode, departureTime, arrivalTime, Fare } = req.body;
@@ -20,18 +21,17 @@ async function createFlight(req, res, next) {
   }
 }
 
-async function getFlights(req,res,next){
 
-  try {
-    const filteredFlights = FlightService.getFlights(query);
-    Success.data = filteredFlights
-    return res.status(200).json(Success)
-  } catch (error) {
-    Error.error.message == error.message
-    return res.status(error.StatusCode).json(Err)
-  }
+//Not completed yet - work in progress
+async function getAllFlights(req,res,next){
+
+    const customFilter = new CustomFilter(req.query).buildFilterObject();
+    console.log(customFilter)
+    // const flights = await FlightService.getFlights({ departureAirportCode , arrivalAirportCode })
+    res.json(customFilter)
 }
 
 module.exports = {
     createFlight,
-};
+    getAllFlights
+};  
