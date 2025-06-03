@@ -10,7 +10,7 @@ class CustomFilter {
         this.handleTravelClass();
         this.handleDepartureTime();
         this.handlePriceRange();
-        this.handleRoute2();
+        // this.handleRoute2();             //Temporarily disabled
         return this.filter
     }
 

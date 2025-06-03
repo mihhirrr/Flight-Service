@@ -21,14 +21,15 @@ async function createFlight(req, res, next) {
   }
 }
 
-
-//Not completed yet - work in progress
 async function getAllFlights(req,res,next){
-
-    const customFilter = new CustomFilter(req.query).buildFilterObject();
-    console.log(customFilter)
-    // const flights = await FlightService.getFlights({ departureAirportCode , arrivalAirportCode })
-    res.json(customFilter)
+    try {
+      const customFilter = new CustomFilter(req.query).buildFilterObject();
+      const foundFlights = await FlightService.getFlights(customFilter);
+      res.json(foundFlights)
+    } catch (error) {
+      const ErrorResponse = { ...Error, error: { message: error.message } };
+      res.status(error.StatusCode).json(ErrorResponse)
+    }
 }
 
 module.exports = {

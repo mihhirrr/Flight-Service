@@ -13,7 +13,7 @@ async function compareTime(req,res,next){
 
 async function getFlightsValidation(req,res,next) {
     if(!(req.query.route1 && req.query.passengerList &&  req.query.travelClass)){
-        ErrorResponse  = {...Error}
+        const ErrorResponse  = {...Error}
         ErrorResponse.error.message = 'Atleast one Trip, Travel class, number of travelers each required'
         res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse)
     }
