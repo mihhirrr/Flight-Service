@@ -11,7 +11,9 @@ class FlightRepository extends CrudFunctions {
   async getFlights(query) {
     try {
       // console.log(query.where)
-      const filteredFlights = await flights.findAll( { where: query } );
+      const filteredFlights = await flights.findAll( { 
+        where: query 
+      } );
       return filteredFlights
     } catch (error) {
       console.log(error)

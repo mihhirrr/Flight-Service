@@ -25,14 +25,14 @@ async function getAllFlights(req,res,next){
     try {
       const customFilter = new CustomFilter(req.query).buildFilterObject();
       const foundFlights = await FlightService.getFlights(customFilter);
-      res.json(foundFlights)
+      res.status(StatusCodes.OK).json(foundFlights)
     } catch (error) {
       const ErrorResponse = { ...Error, error: { message: error.message } };
-      res.status(error.StatusCode).json(ErrorResponse)
+      res.status(500).json(ErrorResponse)
     }
 }
 
 module.exports = {
-    createFlight,
+    createFlight, 
     getAllFlights
-};  
+};

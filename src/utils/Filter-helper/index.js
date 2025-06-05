@@ -90,6 +90,31 @@ class CustomFilter {
 
 }
 
+class CustomSort {
+    constructor(query){
+        this.query = query;
+        this.sort = []
+    }
+
+    buildSortObject(){
+        this.sortQuery()
+        
+        return this.sort;
+    }
+
+
+    //Sort by price
+    sortQuery(){
+        if(!this.query.sortBy) return;
+        const { sortBy } = this.query;
+
+        this.sort = sortBy.split('_');
+        console.log(this.sort)
+    }
+
+}
+
 module.exports = {
-    CustomFilter
+    CustomFilter,
+    CustomSort
 }

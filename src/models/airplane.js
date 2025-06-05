@@ -26,10 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        validate: {
-          max: 500,
-        },
-      },
+      }
     },
     {
       sequelize,
