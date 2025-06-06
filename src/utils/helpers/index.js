@@ -99,19 +99,16 @@ class CustomSort {
     buildSortObject(){
         this.sortQuery()
         
-        return this.sort;
+        return [this.sort];
     }
 
-
-    //Sort by price
+    //Creating the sort object
     sortQuery(){
         if(!this.query.sortBy) return;
         const { sortBy } = this.query;
 
         this.sort = sortBy.split('_');
-        console.log(this.sort)
     }
-
 }
 
 module.exports = {
