@@ -1,3 +1,4 @@
-Executing (default): SELECT `id`, `flightNumber`, `airplaneId`, `departureAirportCode`, `arrivalAirportCode`, `departureTime`, `arrivalTime`, `Fare`, `boardingGate`, `createdAt`, `updatedAt` FROM `flights` AS `flights` WHERE (`flights`.`departureAirportCode` = 'MUM' AND `flights`.`arrivalAirportCode` = 'HYD' AND `flights`.`departureTime` BETWEEN '2025-06-19 00:00:00' AND '2025-06-19 23:59:59' AND `flights`.`priceRange` BETWEEN '1000' AND '5000') ORDER BY `flights`.`Fare` DESC;
+const { Enums } = require('../utils/common-utils')
 
-Select departureAirportCode, arrivalAirportCode, departureTime, priceRange from flights where departureAirportCode = 'MUM' and arrivalAirportCode = 'HYD' and departureTime between '2025-06-19 00:00:00' and '2025-06-19 23:59:59' and priceRange between 1000 and 5000 order by Fare desc;
+
+console.log(Enums)
