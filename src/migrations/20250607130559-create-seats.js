@@ -19,6 +19,10 @@ module.exports = {
       airplaneId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references:{
+          model:'Airplanes',
+          key:'id'
+        },
       },
       row: {
         type: Sequelize.INTEGER,
