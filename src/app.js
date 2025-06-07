@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const ServerConfig = require("./src/config/server-config.js");
-const { AirplaneRouter, CityRouter, AirportRouter , FlightRouter} = require("./src/routes");
+const ServerConfig = require('./config/server-config.js');
+const { AirplaneRouter, CityRouter, AirportRouter , FlightRouter} = require("./routes/index.js");
   
 app.use(express.json());
 app.use(express.urlencoded());
