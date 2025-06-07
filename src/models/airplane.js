@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'airplaneId',
         onUpdate:'CASCADE',
         onDelete:'CASCADE'
-      }) 
+      })
     }
   }
   Airplane.init(
