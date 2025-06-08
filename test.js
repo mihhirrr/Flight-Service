@@ -5,3 +5,5 @@ FROM information_schema.KEY_COLUMN_USAGE
 WHERE TABLE_NAME = 'seats' AND COLUMN_NAME = 'airplaneId';
 
 */
+
+console.log(require('./src/utils/common-utils').Seats)
