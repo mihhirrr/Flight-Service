@@ -36,10 +36,10 @@ class CrudFunctions {
       const response = await this.model.findAll();
       return response;
     } catch (error) {
-      console.log(
-        "There was an error while retrieving the data from " + this.model
+      throw new AppError(
+        `Unable to compl;ete the request`,
+        StatusCodes.INTERNAL_SERVER_ERROR
       );
-      throw error;
     }
   }
 
@@ -51,7 +51,6 @@ class CrudFunctions {
         },
       });
       if (!response[0]) {
-        // console.log(response);
         throw new AppError(
           `Resource not found for the ID ${id}`,
           StatusCodes.NOT_FOUND
@@ -60,7 +59,7 @@ class CrudFunctions {
       return response;
     } catch (error) {
       console.log(
-        "There was an error while updating the data in " + this.model
+        `There was an error while updating the data in ${this.model}`
       );
       throw error;
     }

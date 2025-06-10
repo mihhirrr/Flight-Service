@@ -7,33 +7,18 @@ const { CustomFilter, CustomSort } = require('../utils/helpers');
 
 const flightsRepository = new FlightRepository();
 
-/**
- * Creates a new flight record in the database.
- *
- * @param {Object} data - Flight data to be created.
- * @returns {Promise<Object>} The created flight record.
- * @throws {AppError} Throws if validation fails or on other errors.
- */
 const createFlight = async (data) => {
   try {
     const createdFlight = await flightsRepository.create(data);
     return createdFlight;
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
-      throw new AppError(error.message, StatusCodes.BAD_REQUEST);
+      throw new AppError(error.message || 'There was a problem while creating the flight', StatusCodes.BAD_REQUEST);
     }
-    console.log("There was an error while creating the flight");
-    throw error;
+    throw new AppError(error.message, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
-/**
- * Retrieves flights matching the query filters and sorts.
- *
- * @param {Object} query - Query parameters for filtering and sorting flights.
- * @returns {Promise<Array>} List of flights matching the criteria.
- * @throws {AppError} Throws on database retrieval errors.
- */
 const getFlights = async (query) => {
 
   // Build filter and sort objects based on query
@@ -74,7 +59,29 @@ const getFlights = async (query) => {
   }
 };
 
+const getFlightById = async (id) => {
+  try {
+    const RetrievedFlight = await flightsRepository.find(id);
+    return RetrievedFlight;
+  } catch (error) {
+    if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';
+    throw new AppError(error.message || 'There was a problem while creating the flight', error.StatusCode);
+  }
+};
+
+const updateFlight = async (id, data) => {
+  try {
+    const updatedFlight = await flightsRepository.update(id, data);
+    return updatedFlight;
+  } catch (error) {
+    if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';
+    throw new AppError(error.message || 'There was a problem while updating the flight', error.StatusCode);
+  }
+};
+
 module.exports = {
   createFlight,
-  getFlights
+  getFlights,
+  getFlightById,
+  updateFlight
 };

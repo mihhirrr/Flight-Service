@@ -12,15 +12,6 @@ class FlightRepository extends CrudFunctions {
     super(flights);
   }
 
-  /**
-   * Retrieves flights matching the provided query filters and sorting criteria.
-   *
-   * @param {Object} query - Sequelize 'where' filter object for flight search.
-   * @param {Array} sort - Sequelize 'order' array to sort results.
-   * @param {Array} includeQuery - Sequelize 'include' array to include related models.
-   * @returns {Promise<Array>} List of matching flight records.
-   * @throws {AppError} Throws if there's an error querying the database.
-   */
   async getFlights(query, sort, includeQuery) {
     try {
       const filteredFlights = await flights.findAll({
