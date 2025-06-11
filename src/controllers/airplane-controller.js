@@ -34,15 +34,15 @@ async function updateAirplane(req, res, next) {
   });
 
   try {
-    const updatedAirplane = await AirplaneService.updateAirplane(id, updates);
+    await AirplaneService.updateAirplane(id, updates);
     Success.message = "Airplane updated successfully!";
-    Success.data = updatedAirplane;
+    Success.data = {};
     return res.status(StatusCodes.OK).json(Success);
   } catch (error) {
     console.log(error);
     Error.error.message = error.message;
     Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    return res.status(error.StatusCode).json(Error); 
   }
 }
 

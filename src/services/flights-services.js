@@ -1,4 +1,4 @@
-const { FlightRepository } = require("../repositories");
+const { FlightRepository, AirplaneRepository } = require("../repositories");
 const { Airplane, Airport } = require('../models');
 const AppError = require("../utils/Error-handler/AppError");
 const { StatusCodes } = require("http-status-codes");
@@ -25,6 +25,8 @@ const getFlights = async (query) => {
   try {
   const FilterQuery = new CustomFilter(query).buildFilterObject();
   const SortQuery = new CustomSort(query).buildSortObject();
+
+  //creating includeQuery Array to pass to flightsRepository.getFlights for joining the Airplane and Airport Tables 
   const includeQuery = [
     {
       model: Airplane,
@@ -42,6 +44,7 @@ const getFlights = async (query) => {
     },
   ]
 
+  // creating custom filter to pass to flightsRepository.getFlights filter the flights on the basis of user selection for routes
   const customFilter = {
     [Op.and]: [
       { departureAirportCode: { [Op.eq]: FilterQuery.route1.departureAirportCode } },
@@ -79,9 +82,30 @@ const updateFlight = async (id, data) => {
   }
 };
 
+const updateAvailableSeats = async(id, seatSelection, decrement) =>{
+
+    try {
+      const flight = await flightsRepository.find(id);
+      const Airplane = await flight.getAirplane();
+      const selection = {}
+
+      //dynamically creating the selection object to pass to decrement/increment
+      if (seatSelection.Economy) selection.EconomyCapacity = seatSelection.Economy;
+      if (seatSelection.Business) selection.BusinessClassCapacity = seatSelection.Business;
+      if (seatSelection.FirstClass) selection.FirstClassCapacity = seatSelection.FirstClass;
+
+      if(decrement) return await Airplane.decrement(selection)
+      return await Airplane.increment(selection)
+    
+    } catch (error) {
+      throw new AppError('Unable to fulfill the request', StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+}
+
 module.exports = {
   createFlight,
   getFlights,
   getFlightById,
-  updateFlight
+  updateFlight,
+  updateAvailableSeats
 };

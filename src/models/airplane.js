@@ -31,10 +31,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
+      },
+      EconomyCapacity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      BusinessClassCapacity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      FirstClassCapacity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       }
     },
     {
       sequelize,
+      modelName: "Airplane",
     }
   );
   return Airplane;

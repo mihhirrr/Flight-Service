@@ -6,4 +6,5 @@ WHERE TABLE_NAME = 'seats' AND COLUMN_NAME = 'airplaneId';
 
 */
 
-console.log(require('./src/utils/common-utils').Seats)
+const decrement = '0';
+console.log(parseInt(decrement))

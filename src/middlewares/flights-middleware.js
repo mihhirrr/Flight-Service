@@ -18,14 +18,6 @@ async function compareTime(req, res, next) {
   }
 }
 
-/**
- * Validates required query parameters and ensures departure and arrival airports differ.
- *
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- * @returns {Promise<void>}
- */
 async function getFlightsValidation(req, res, next) {
   if (!(req.query.route1 && req.query.passengerList && req.query.travelClass)) {
     const ErrorResponse = { ...Error };
@@ -42,7 +34,17 @@ async function getFlightsValidation(req, res, next) {
   next();
 }
 
+async function verifyUpdateSeats(req, res, next) {
+  if(!req.params.flightId){
+    const ErrorResponse = { ...Error };
+    ErrorResponse.error.message = 'Flight ID not provided';
+    return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+  }
+  next();
+}
+
 module.exports = {
   compareTime,
-  getFlightsValidation
+  getFlightsValidation,
+  verifyUpdateSeats
 };

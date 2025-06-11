@@ -1,6 +1,9 @@
 const { FlightService } = require("../services");
 const { StatusCodes } = require("http-status-codes");
 const { Error, Success } = require("../utils/common-utils");
+const { CustomFilter }  = require('../utils/helpers')
+const { data } = require("../utils/common-utils/success");
+const { parse } = require("dotenv");
 
 
 async function createFlight(req, res, next) {
@@ -87,7 +90,6 @@ async function updateFlight(req, res, next) {
     }
   });
 
-  console.log(updates)
 
   try {
     const updatedFlight = await FlightService.updateFlight(id, updates);
@@ -102,10 +104,30 @@ async function updateFlight(req, res, next) {
   }
 }
 
+async function updateSeats(req, res, next){
+  const id = parseInt(req.params.flightId)
+  // const seatSelection = req.body.seatSelection;
+
+  const decrement = req.query.decrement === '0'? false : true
+
+  /// calling the CustomSort Class to create seatSelection object for travelClass selection
+  const seatSelection = new CustomFilter(req.query).buildFilterObject();
+
+  try {
+    const Response = await FlightService.updateAvailableSeats(id, seatSelection.travelClass, decrement)
+    return res.status(StatusCodes.OK).json(Response)
+  } catch (error) {
+    ErrorResponse = { ...Error }
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse);
+  }
+}
 
 module.exports = {
   createFlight,
   getAllFlights,
   getFlightById,
-  updateFlight
+  updateFlight,
+  updateSeats
 };

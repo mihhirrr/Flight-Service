@@ -42,7 +42,7 @@ class CustomFilter {
     //Handle Travel Class selection
     handleTravelClass(){
         if(!this.query.travelClass) return;
-        const { travelClass } = this.query
+        const { travelClass } = this.query;
         this.filter.travelClass = {};
 
         const [Economy, Business, FirstClass] = travelClass.split('-');
@@ -63,7 +63,7 @@ class CustomFilter {
     //Writing additional Filter options
     //added price filter to the custom filter if opted
     handlePriceRange(){
-        if(!this.query.priceRange) return;                          // returning if no price range provided
+        if(!this.query.priceRange) return;
 
         const { priceRange } = this.query
 
@@ -77,7 +77,7 @@ class CustomFilter {
 
     //added route2 filter to the custom filter if opted
     handleRoute2(){
-        if(!this.query.route2) return;                          // returning if additional route not provided
+        if(!this.query.route2) return;
 
         const { route2 } = this.query
 

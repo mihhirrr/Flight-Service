@@ -11,5 +11,8 @@ Router.route('/:id')
   .get(FlightController.getFlightById)
   .patch(FlightController.updateFlight)
 
+Router.route('/:flightId/seats')
+  .patch(FlightController.updateSeats)
+
 
 module.exports = Router;
