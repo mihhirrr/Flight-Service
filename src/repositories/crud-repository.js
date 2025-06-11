@@ -37,7 +37,7 @@ class CrudFunctions {
       return response;
     } catch (error) {
       throw new AppError(
-        `Unable to compl;ete the request`,
+        `Unable to complete the request`,
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }

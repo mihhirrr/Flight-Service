@@ -1,5 +1,7 @@
 const { FlightRepository, AirplaneRepository } = require("../repositories");
 const { Airplane, Airport } = require('../models');
+const db = require('../models')
+const { lockAirplaneTable, lockFlightsTable } = require('./queries')
 const AppError = require("../utils/Error-handler/AppError");
 const { StatusCodes } = require("http-status-codes");
 const { Op } = require('sequelize');
@@ -21,7 +23,7 @@ const createFlight = async (data) => {
 
 const getFlights = async (query) => {
 
-  // Build filter and sort objects based on query
+  // Build filter and sort objects based on user query
   try {
   const FilterQuery = new CustomFilter(query).buildFilterObject();
   const SortQuery = new CustomSort(query).buildSortObject();
@@ -44,7 +46,7 @@ const getFlights = async (query) => {
     },
   ]
 
-  // creating custom filter to pass to flightsRepository.getFlights filter the flights on the basis of user selection for routes
+  // creating custom filter query to pass to flightsRepository.getFlights filter the flights on the basis of user selection for routes
   const customFilter = {
     [Op.and]: [
       { departureAirportCode: { [Op.eq]: FilterQuery.route1.departureAirportCode } },
@@ -74,6 +76,7 @@ const getFlightById = async (id) => {
 
 const updateFlight = async (id, data) => {
   try {
+    await db.sequelize.query(lockFlightsTable(id)); // Row lock to tackle race condition
     const updatedFlight = await flightsRepository.update(id, data);
     return updatedFlight;
   } catch (error) {
@@ -86,6 +89,7 @@ const updateAvailableSeats = async(id, seatSelection, decrement) =>{
 
     try {
       const flight = await flightsRepository.find(id);
+      await db.sequelize.query(lockAirplaneTable(flight.airplaneId))    // calling row lock on Airplane table to update the seat selection
       const Airplane = await flight.getAirplane();
       const selection = {}
 

@@ -45,18 +45,14 @@ async function getAllFlights(req, res, next) {
   try {
     const foundFlights = await FlightService.getFlights(req.query);
 
-    const SuccessResponse = {
-      ...Success,
+    const SuccessResponse = { ...Success,
       data: foundFlights
     };
 
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = {
-      ...Error,
-      error: {
-        message: error.message
-      }
+    const ErrorResponse = { ...Error,
+      error: { message: error.message }
     };
 
     return res.status(200).json(ErrorResponse);
@@ -68,13 +64,18 @@ async function getFlightById(req, res, next) {
 
   try {
     const RetrievedFlight = await FlightService.getFlightById(id);
-    Success.message = "Flight found!";
-    Success.data = RetrievedFlight;
-    return res.status(StatusCodes.OK).json(Success);
+
+    const SuccessResponse = {
+      ...Success,
+      message: "Flight found!",
+      data: RetrievedFlight
+    };
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    const ErrorResponse = { ...Error,
+      error: { message: error.message }
+    };
+    return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 
@@ -106,11 +107,8 @@ async function updateFlight(req, res, next) {
 
 async function updateSeats(req, res, next){
   const id = parseInt(req.params.flightId)
-  // const seatSelection = req.body.seatSelection;
-
-  const decrement = req.query.decrement === '0'? false : true
-
-  /// calling the CustomSort Class to create seatSelection object for travelClass selection
+  const decrement = req.query.decrement === '0'? false : true;
+  /// calling the CustomFilter Class to create seatSelection object for based on travelClass selection
   const seatSelection = new CustomFilter(req.query).buildFilterObject();
 
   try {
