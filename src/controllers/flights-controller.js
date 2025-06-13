@@ -94,9 +94,10 @@ async function updateFlight(req, res, next) {
 
   try {
     const updatedFlight = await FlightService.updateFlight(id, updates);
-    Success.message = "Flight updated successfully!";
-    Success.data = updatedFlight;
-    return res.status(StatusCodes.OK).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Flight updated successfully!";
+    SuccessResponse.data = updatedFlight;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     ErrorResponse = { ...Error }
     ErrorResponse.error.message = error.message;
@@ -108,11 +109,16 @@ async function updateFlight(req, res, next) {
 async function updateSeats(req, res, next){
   const id = parseInt(req.params.flightId)
   const decrement = req.query.decrement === '0'? false : true;
+
   /// calling the CustomFilter Class to create seatSelection object for based on travelClass selection
   const seatSelection = new CustomFilter(req.query).buildFilterObject();
 
   try {
     const Response = await FlightService.updateAvailableSeats(id, seatSelection.travelClass, decrement)
+    // const SuccessResponse = { ...Success }
+    // console.log(Success)
+    // SuccessResponse.data = Response;
+    console.log(Success)
     return res.status(StatusCodes.OK).json(Response)
   } catch (error) {
     ErrorResponse = { ...Error }
