@@ -1,5 +1,5 @@
 const { FlightRepository, AirplaneRepository } = require("../repositories");
-const { Airplane, Airport } = require('../models');
+const { Airplane, Airport, Class_Fare } = require('../models');
 const db = require('../models')
 const { lockAirplaneTable, lockFlightsTable } = require('./queries')
 const AppError = require("../utils/Error-handler/AppError");
@@ -67,7 +67,11 @@ const getFlights = async (query) => {
 
 const getFlightById = async (id) => {
   try {
-    const RetrievedFlight = await flightsRepository.find(id);
+    const RetrievedFlight = await flightsRepository.getFlightsByPk(id, {
+      model: Class_Fare,
+      required: true,
+      attributes: [ 'travelClass', 'farePrice', 'currency', 'AllowedLuggage']
+    });
     return RetrievedFlight;
   } catch (error) {
     if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';

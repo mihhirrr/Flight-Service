@@ -12,6 +12,21 @@ class FlightRepository extends CrudFunctions {
     super(flights);
   }
 
+  async getFlightsByPk(id, includeQuery) {
+    try {
+      const flight = await flights.findByPk(id, {
+        include: includeQuery,
+      });
+      return flight;
+    } catch (error) {
+      console.log(error)
+      throw new AppError(
+        'There was an error while retrieving the flights',
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   async getFlights(query, sort, includeQuery) {
     try {
       const filteredFlights = await flights.findAll({
@@ -21,7 +36,6 @@ class FlightRepository extends CrudFunctions {
       });
       return filteredFlights;
     } catch (error) {
-      console.error(error);
       throw new AppError(
         'There was an error while retrieving the flights',
         StatusCodes.INTERNAL_SERVER_ERROR

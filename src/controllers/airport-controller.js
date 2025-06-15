@@ -80,11 +80,12 @@ async function getAirportById(req, res, next) {
     const RetrievedAirport = await AirportService.getAirportById(id);
     Success.message = "Airport found!";
     Success.data = RetrievedAirport;
+    console.log(RetrievedAirport)
     return res.status(StatusCodes.OK).json(Success);
   } catch (error) {
     Error.error.message = error.message;
     Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    return res.status(500).json(Error);
   }
 }
 

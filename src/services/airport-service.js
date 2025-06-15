@@ -49,7 +49,7 @@ const getAllAirports = async () => {
 
 const getAirportById = async (id) => {
   try {
-    const RetrievedAirport = await airplaneRepository.find(id);
+    const RetrievedAirport = await airportRepository.find(id);
     return RetrievedAirport;
   } catch (error) {
     throw error;
