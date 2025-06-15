@@ -51,10 +51,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull:false
       },
-      Fare: {
-        type: Sequelize.INTEGER,
-        allowNull:false
-      },
       boardingGate: {
         type: Sequelize.STRING
       },

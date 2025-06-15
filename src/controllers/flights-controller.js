@@ -2,7 +2,7 @@ const { FlightService } = require("../services");
 const { StatusCodes } = require("http-status-codes");
 const { Error, Success } = require("../utils/common-utils");
 const { CustomFilter }  = require('../utils/helpers')
-const { data } = require("../utils/common-utils/success");
+const { data, message } = require("../utils/common-utils/success");
 const { parse } = require("dotenv");
 
 
@@ -28,16 +28,19 @@ async function createFlight(req, res, next) {
       Fare
     });
 
-    Success.message = "Flight scheduled successfully";
-    Success.data = createdFlight;
+    const SuccessResponse = { ...Success ,
+      message: "Flight scheduled successfully",
+      data: createdFlight
+    }
 
-    return res.status(StatusCodes.CREATED).json(Success);
+    return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    Error.message = "Unable to add Flight";
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
+      const ErrorResponse = { ...Error , 
+        message: "Unable to add Flight" , 
+        error: { message: error.message }
+      }
 
-    return res.status(error.StatusCode).json(Error);
+      return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 
@@ -46,6 +49,7 @@ async function getAllFlights(req, res, next) {
     const foundFlights = await FlightService.getFlights(req.query);
 
     const SuccessResponse = { ...Success,
+      message: 'Flights found!',
       data: foundFlights
     };
 
@@ -94,14 +98,17 @@ async function updateFlight(req, res, next) {
 
   try {
     const updatedFlight = await FlightService.updateFlight(id, updates);
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Flight updated successfully!";
-    SuccessResponse.data = updatedFlight;
+    const SuccessResponse = { ...Success ,
+      message: "Flight updated successfully!",
+      data: updatedFlight
+    }
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
+
+    ErrorResponse = { ...Error ,
+      error: { message: error.message , },
+    }
+
     return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
@@ -121,9 +128,11 @@ async function updateSeats(req, res, next){
     console.log(Success)
     return res.status(StatusCodes.OK).json(Response)
   } catch (error) {
-    ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
+
+    ErrorResponse = { ...Error , 
+      error: { message: error.message }
+    }
+    
     return res.status(error.StatusCode).json(ErrorResponse);
   }
 }

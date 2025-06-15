@@ -10,14 +10,16 @@ async function createAirplane(req, res, next) {
       ModelNo,
       Capacity,
     });
-    Success.message = "Airplane created successfully";
-    Success.data = createdAirplane;
-    return res.status(StatusCodes.CREATED).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Airplane created successfully";
+    SuccessResponse.data = createdAirplane;
+    return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    Error.message = "Unable to add an Airplane";
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    const ErrorResponse = { ...Error }
+    ErrorResponse.message = "Unable to add an Airplane";
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 
@@ -35,14 +37,14 @@ async function updateAirplane(req, res, next) {
 
   try {
     await AirplaneService.updateAirplane(id, updates);
-    Success.message = "Airplane updated successfully!";
-    Success.data = {};
-    return res.status(StatusCodes.OK).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Airplane updated successfully!";
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    console.log(error);
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error); 
+    const ErrorResponse = { ...Error }
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse); 
   }
 }
 
@@ -51,26 +53,30 @@ async function deleteAirplane(req, res, next) {
 
   try {
     const deletedAirplane = await AirplaneService.deleteAirplane(id);
-    Success.message = "Airplane deleted successfully!";
-    Success.data = deletedAirplane;
-    return res.status(StatusCodes.OK).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Airplane deleted successfully!";
+    SuccessResponse.data = deletedAirplane;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    const ErrorResponse = { ...Error }
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 
 async function getAllAirplanes(req, res, next) {
   try {
     const getAllAirplanes = await AirplaneService.getAllAirplanes();
-    Success.message = "Airplanes retrieved successfully!";
-    Success.data = getAllAirplanes;
-    return res.status(StatusCodes.OK).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Airplanes retrieved successfully!";
+    SuccessResponse.data = getAllAirplanes;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    const ErrorResponse = { ...Error }
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 
@@ -79,13 +85,15 @@ async function getAirplaneById(req, res, next) {
 
   try {
     const RetrievedAirplane = await AirplaneService.getAirplaneById(id);
-    Success.message = "Airplane found!";
-    Success.data = RetrievedAirplane;
-    return res.status(StatusCodes.OK).json(Success);
+    const SuccessResponse = { ...Success }
+    SuccessResponse.message = "Airplane found!";
+    SuccessResponse.data = RetrievedAirplane;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    Error.error.message = error.message;
-    Error.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(Error);
+    const ErrorResponse = { ...Error }
+    ErrorResponse.error.message = error.message;
+    ErrorResponse.error.StatusCode = error.StatusCode;
+    return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
 

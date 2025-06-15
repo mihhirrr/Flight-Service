@@ -1,14 +1,6 @@
 const StatusCodes = require('http-status-codes');
 const { Error } = require('../utils/common-utils');
 
-/**
- * Validates that arrivalTime is after departureTime in the request body.
- *
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- * @returns {Promise<void>}
- */
 async function compareTime(req, res, next) {
   if (new Date(req.body.arrivalTime) > new Date(req.body.departureTime)) {
     next();
