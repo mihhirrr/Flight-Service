@@ -118,21 +118,18 @@ async function updateSeats(req, res, next){
   const decrement = req.query.decrement === '0'? false : true;
 
   /// calling the CustomFilter Class to create seatSelection object for based on travelClass selection
-  const seatSelection = new CustomFilter(req.query).buildFilterObject();
+  const seatSelection = new CustomFilter(req.body).buildFilterObject();
 
   try {
     const Response = await FlightService.updateAvailableSeats(id, seatSelection.travelClass, decrement)
-    // const SuccessResponse = { ...Success }
-    // console.log(Success)
-    // SuccessResponse.data = Response;
-    console.log(Success)
-    return res.status(StatusCodes.OK).json(Response)
+    const SuccessResponse = { ...Success , 
+      data: Response
+    }
+    return res.status(StatusCodes.OK).json(SuccessResponse)
   } catch (error) {
-
     ErrorResponse = { ...Error , 
       error: { message: error.message }
     }
-    
     return res.status(error.StatusCode).json(ErrorResponse);
   }
 }

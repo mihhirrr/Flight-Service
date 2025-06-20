@@ -22,7 +22,7 @@ module.exports = {
         }
       },
       travelClass: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM,   
         values: [ ECONOMY, BUSINESS, FIRSTCLASS ],
         allowNull: false
       },
@@ -53,11 +53,3 @@ module.exports = {
     await queryInterface.dropTable('Class_Fares');
   }
 };
-
-
-/// Fucked up with sequelize migrations
-
-////trying to upddate the booking status enums in DB
-
-20250613084855-create-class-fare.js
-20250613084855-create-class-fare.js

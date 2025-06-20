@@ -92,8 +92,9 @@ const updateFlight = async (id, data) => {
 
 const updateAvailableSeats = async(id, seatSelection, decrement) =>{
 
+    const t = await db.sequelize.transaction();
+    
     try {
-      const t = await db.sequelize.transaction();
       const flight = await flightsRepository.find(id);
       await db.sequelize.query(lockAirplaneTable(flight.airplaneId))    // calling row lock on Airplane table to update the seat selection
       const Airplane = await flight.getAirplane();
@@ -104,14 +105,19 @@ const updateAvailableSeats = async(id, seatSelection, decrement) =>{
       if (seatSelection.Business) selection.BusinessClassCapacity = seatSelection.Business;
       if (seatSelection.FirstClass) selection.FirstClassCapacity = seatSelection.FirstClass;
 
-      if(decrement) await Airplane.decrement(selection, { transaction: t } )     
-      else await Airplane.increment(selection, { transaction: t })
+      if(decrement) await Airplane.decrement(selection, 
+        { transaction: t } )     
+
+      else await Airplane.increment(selection,
+        { transaction: t })
+
       await t.commit();
       return 'Seated updated Successfully!';
     
     } catch (error) {
       await t.rollback();
-      throw new AppError('Unable to fulfill the request', StatusCodes.INTERNAL_SERVER_ERROR)
+      throw new AppError('Unable to fulfill the request', 
+        StatusCodes.INTERNAL_SERVER_ERROR)
   }
 }
 
