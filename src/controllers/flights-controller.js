@@ -127,10 +127,11 @@ async function updateSeats(req, res, next){
     }
     return res.status(StatusCodes.OK).json(SuccessResponse)
   } catch (error) {
+    console.log(error)
     ErrorResponse = { ...Error , 
       error: { message: error.message }
     }
-    return res.status(error.StatusCode).json(ErrorResponse);
+    return res.status(500).json(ErrorResponse);
   }
 }
 

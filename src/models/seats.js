@@ -51,6 +51,13 @@ module.exports = (sequelize, DataTypes) => {
     isWindowSeat: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+    },
+    BookingID:{
+      type: DataTypes.INTEGER,
+      references:{
+        model: 'bookings',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

@@ -6,7 +6,6 @@ const AppError = require("../utils/Error-handler/AppError");
 const { StatusCodes } = require("http-status-codes");
 const { Op } = require('sequelize');
 const { CustomFilter, CustomSort } = require('../utils/helpers');
-const { message } = require("../utils/common-utils/success");
 
 const flightsRepository = new FlightRepository();
 
@@ -93,7 +92,7 @@ const updateFlight = async (id, data) => {
 const updateAvailableSeats = async(id, seatSelection, decrement) =>{
 
     const t = await db.sequelize.transaction();
-    
+
     try {
       const flight = await flightsRepository.find(id);
       await db.sequelize.query(lockAirplaneTable(flight.airplaneId))    // calling row lock on Airplane table to update the seat selection
@@ -105,12 +104,8 @@ const updateAvailableSeats = async(id, seatSelection, decrement) =>{
       if (seatSelection.Business) selection.BusinessClassCapacity = seatSelection.Business;
       if (seatSelection.FirstClass) selection.FirstClassCapacity = seatSelection.FirstClass;
 
-      if(decrement) await Airplane.decrement(selection, 
-        { transaction: t } )     
-
-      else await Airplane.increment(selection,
-        { transaction: t })
-
+      if(decrement) await Airplane.decrement(selection, { transaction: t } )     
+      else await Airplane.increment(selection, { transaction: t })
       await t.commit();
       return 'Seated updated Successfully!';
     
