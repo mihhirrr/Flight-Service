@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    BookingID:{
+    BookingId:{
       type: DataTypes.INTEGER,
       references:{
         model: 'bookings',
