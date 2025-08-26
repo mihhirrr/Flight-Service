@@ -12,8 +12,7 @@ const createAirplane = async (data) => {
     if (error.name === "SequelizeValidationError") {
       throw new AppError(error.message, StatusCodes.BAD_REQUEST);
     }
-    console.log("There was an error while creating the airplane");
-    throw error;
+    throw new AppError("There was an error while creating the airplane", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -22,7 +21,7 @@ const updateAirplane = async (id, data) => {
     const updatedAirplane = await airplaneRepository.update(id, data);
     return updatedAirplane;
   } catch (error) {
-    throw error;
+    throw new AppError("There was an error while updating the airplane", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -31,7 +30,7 @@ const deleteAirplane = async (id) => {
     const deletedAirplane = await airplaneRepository.delete(id);
     return deletedAirplane;
   } catch (error) {
-    throw error;
+    throw new AppError("There was an error while deleting the airplane", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -40,10 +39,7 @@ const getAllAirplanes = async () => {
     const getAllAirplanes = await airplaneRepository.findAll();
     return getAllAirplanes;
   } catch (error) {
-    if(error.name == 'TypeError'){
-      throw new AppError('Something went wrong!', StatusCodes.INTERNAL_SERVER_ERROR);
-    }
-    throw error;
+    throw new AppError("There was an error while retrieving the airplanes", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -52,7 +48,7 @@ const getAirplaneById = async (id) => {
     const RetrievedAirplane = await airplaneRepository.find(id);
     return RetrievedAirplane;
   } catch (error) {
-    throw error;
+    throw new AppError("There was an error while retrieving the airplane", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 

@@ -10,7 +10,7 @@ class CustomFilter {
         this.handleTravelClass();
         this.handleDepartureTime();
         this.handlePriceRange();
-        // this.handleRoute2();             //Temporarily disabled
+        // this.handleRoute2();             // Temporarily disabled
         return this.filter
     }
 
@@ -19,6 +19,7 @@ class CustomFilter {
     handleRoute1(){
         if (!this.query.route1) return;
         const { route1 } = this.query
+        this.filter.route1 = {};
 
         const [ departureAirportCode , arrivalAirportCode ] = route1.split('-')
         this.filter.route1 = {
@@ -67,27 +68,12 @@ class CustomFilter {
 
         const { priceRange } = this.query
 
-        this.filter.priceRange = {}
         const [ minPrice , maxPrice ] = priceRange.split('-');
         this.filter.priceRange = {
             minPrice,
             maxPrice
         }
     }
-
-    //added route2 filter to the custom filter if opted
-    handleRoute2(){
-        if(!this.query.route2) return;
-
-        const { route2 } = this.query
-
-        const [ departureAirportCode , arrivalAirportCode ] = route2.split('-')
-        this.filter.route2 = {
-        departureAirportCode,
-        arrivalAirportCode
-      }
-    }
-
 }
 
 class CustomSort {

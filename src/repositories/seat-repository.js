@@ -11,8 +11,9 @@ class SeatRepository extends CrudFunctions {
   async update(data, id, transaction) {
       try {
         const response = await this.model.update(data, {
-          where: id
-        }, { Transaction: transaction } );
+          where: id,
+          transaction
+        });
   
         if (!response[0]) {
           console.log(id)

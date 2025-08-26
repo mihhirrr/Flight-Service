@@ -20,10 +20,11 @@ const createFlight = async (data) => {
     throw new AppError(error.message, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
+// END OF createFlight()
+
 
 const getFlights = async (query) => {
-
-  // Build filter and sort objects based on user query
+  // Build filter and sort objects based on user query while searching flights
   try {
   const FilterQuery = new CustomFilter(query).buildFilterObject();
   const SortQuery = new CustomSort(query).buildSortObject();
@@ -46,7 +47,7 @@ const getFlights = async (query) => {
     },
   ]
 
-  // creating custom filter query to pass to flightsRepository.getFlights filter the flights on the basis of user selection for routes
+  // creating custom filter query to pass to flightsRepository.getFlights to filter the flights results on the basis of user selection for routes
   const customFilter = {
     [Op.and]: [
       { departureAirportCode: { [Op.eq]: FilterQuery.route1.departureAirportCode } },
@@ -71,6 +72,7 @@ const getFlightById = async (id) => {
       required: true,
       attributes: [ 'travelClass', 'farePrice', 'currency', 'AllowedLuggage']
     });
+
     return RetrievedFlight;
   } catch (error) {
     if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';
@@ -79,11 +81,18 @@ const getFlightById = async (id) => {
 };
 
 const updateFlight = async (id, data) => {
+
+  const t = await db.sequelize.transaction();
   try {
-    await db.sequelize.query(lockFlightsTable(id)); // Row lock to tackle race condition
-    const updatedFlight = await flightsRepository.update(id, data);
+    await db.sequelize.query(lockFlightsTable(id), { transaction: t} ); // Row lock to tackle concurrency race condition
+
+    const updatedFlight = await flightsRepository.update(id, data, t );
+
+    t.commit()
     return updatedFlight;
   } catch (error) {
+    
+    t.rollback();
     if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';
     throw new AppError(error.message || 'There was a problem while updating the flight', error.StatusCode);
   }
@@ -95,21 +104,24 @@ const updateAvailableSeats = async(id, seatSelection, decrement) =>{
 
     try {
       const flight = await flightsRepository.find(id);
-      await db.sequelize.query(lockAirplaneTable(flight.airplaneId))    // calling row lock on Airplane table to update the seat selection
+      await db.sequelize.query(lockAirplaneTable(flight.airplaneId), { transaction: t} )    // calling row lock on Airplane table to update the seat selection / capacity
       const Airplane = await flight.getAirplane();
+      
+      //dynamically creating the selection object to pass to decrement/increment the seats
       const selection = {}
-
-      //dynamically creating the selection object to pass to decrement/increment
       if (seatSelection.Economy) selection.EconomyCapacity = seatSelection.Economy;
       if (seatSelection.Business) selection.BusinessClassCapacity = seatSelection.Business;
       if (seatSelection.FirstClass) selection.FirstClassCapacity = seatSelection.FirstClass;
 
+      // Increasing/reducing the seat availability
       if(decrement) await Airplane.decrement(selection, { transaction: t } )     
       else await Airplane.increment(selection, { transaction: t })
+
       await t.commit();
       return 'Seated updated Successfully!';
     
     } catch (error) {
+      
       await t.rollback();
       throw new AppError('Unable to fulfill the request', 
         StatusCodes.INTERNAL_SERVER_ERROR)

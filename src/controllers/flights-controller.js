@@ -6,6 +6,7 @@ const { data, message } = require("../utils/common-utils/success");
 const { parse } = require("dotenv");
 
 
+
 async function createFlight(req, res, next) {
   const {
     flightNumber,
@@ -28,22 +29,27 @@ async function createFlight(req, res, next) {
       Fare
     });
 
-    const SuccessResponse = { ...Success ,
+    const SuccessResponse = { ...Success,
       message: "Flight scheduled successfully",
       data: createdFlight
     }
 
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-      const ErrorResponse = { ...Error , 
-        message: "Unable to add Flight" , 
-        error: { message: error.message }
+    const ErrorResponse = { ...Error,
+      message: "Unable to schedule Flight",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
       }
-
-      return res.status(error.StatusCode).json(ErrorResponse);
+    }
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
+// END of createFlight()
 
+//get all flights for a given route, travel class, number of travelers each
 async function getAllFlights(req, res, next) {
   try {
     const foundFlights = await FlightService.getFlights(req.query);
@@ -59,9 +65,11 @@ async function getAllFlights(req, res, next) {
       error: { message: error.message }
     };
 
-    return res.status(200).json(ErrorResponse);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
   }
 }
+// END of getAllFlights()
+
 
 async function getFlightById(req, res, next) {
   const id = parseInt(req.params.id);
@@ -79,9 +87,12 @@ async function getFlightById(req, res, next) {
     const ErrorResponse = { ...Error,
       error: { message: error.message }
     };
-    return res.status(error.StatusCode).json(ErrorResponse);
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
+// END OF getFlightById()
+
 
 async function updateFlight(req, res, next) {
   const id = parseInt(req.params.id);
@@ -98,42 +109,48 @@ async function updateFlight(req, res, next) {
 
   try {
     const updatedFlight = await FlightService.updateFlight(id, updates);
-    const SuccessResponse = { ...Success ,
+    const SuccessResponse = { ...Success,
+      StatusCode: StatusCodes.OK,
       message: "Flight updated successfully!",
       data: updatedFlight
     }
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-
-    ErrorResponse = { ...Error ,
-      error: { message: error.message , },
+    const ErrorResponse = { ...Error,
+      error: { message: error.message,
+        StatusCode: error.StatusCode
+      }
     }
 
-    return res.status(error.StatusCode).json(ErrorResponse);
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
+// END OF updateFlight()
+
 
 async function updateSeats(req, res, next){
   const id = parseInt(req.params.flightId)
-  const decrement = req.query.decrement === '0'? false : true;
+  const decrement = req.query.decrement === '0'? false : true;  // for increment and decrement of seats in the flight.
 
   /// calling the CustomFilter Class to create seatSelection object for based on travelClass selection
   const seatSelection = new CustomFilter(req.body).buildFilterObject();
 
   try {
     const Response = await FlightService.updateAvailableSeats(id, seatSelection.travelClass, decrement)
-    const SuccessResponse = { ...Success , 
+    const SuccessResponse = { ...Success, 
       data: Response
     }
     return res.status(StatusCodes.OK).json(SuccessResponse)
   } catch (error) {
     console.log(error)
-    ErrorResponse = { ...Error , 
+    const ErrorResponse = { ...Error, 
       error: { message: error.message }
     }
     return res.status(500).json(ErrorResponse);
   }
 }
+// END OF updateSeats()
 
 module.exports = {
   createFlight,

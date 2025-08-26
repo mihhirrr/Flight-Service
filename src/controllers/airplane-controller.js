@@ -10,15 +10,19 @@ async function createAirplane(req, res, next) {
       ModelNo,
       Capacity,
     });
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Airplane created successfully";
-    SuccessResponse.data = createdAirplane;
+    const SuccessResponse = { ...Success,
+      message: "Airplane created successfully",
+      data: createdAirplane
+    }
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = { ...Error }
-    ErrorResponse.message = "Unable to add an Airplane";
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
+    const ErrorResponse = { ...Error,
+      message: "Unable to add an Airplane",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
+      }
+    }
     return res.status(error.StatusCode).json(ErrorResponse);
   }
 }
@@ -37,14 +41,21 @@ async function updateAirplane(req, res, next) {
 
   try {
     await AirplaneService.updateAirplane(id, updates);
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Airplane updated successfully!";
-    return res.status(StatusCodes.OK).json(SuccessResponse);
+    const SuccessResponse = { ...Success,
+      message: "Airplane updated successfully!",
+      data: updates
+    }
+    return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(ErrorResponse); 
+    const ErrorResponse = { ...Error,
+      message: "Unable to update the Airplane",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
+      }
+    }
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse); 
   }
 }
 
@@ -53,30 +64,42 @@ async function deleteAirplane(req, res, next) {
 
   try {
     const deletedAirplane = await AirplaneService.deleteAirplane(id);
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Airplane deleted successfully!";
-    SuccessResponse.data = deletedAirplane;
+    const SuccessResponse = { ...Success,
+      message: "Airplane deleted successfully!",
+      data: deletedAirplane
+    }
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(ErrorResponse);
+    const ErrorResponse = { ...Error,
+      message: "Unable to delete the Airplane",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
+      }
+    }
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
 
 async function getAllAirplanes(req, res, next) {
   try {
     const getAllAirplanes = await AirplaneService.getAllAirplanes();
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Airplanes retrieved successfully!";
-    SuccessResponse.data = getAllAirplanes;
+    const SuccessResponse = { ...Success,
+      message: "Airplanes retrieved successfully!",
+      data: getAllAirplanes
+    }
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(ErrorResponse);
+    const ErrorResponse = { ...Error,
+      message: "Unable to retrieve the Airplanes",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
+      }
+    }
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
 
@@ -85,15 +108,21 @@ async function getAirplaneById(req, res, next) {
 
   try {
     const RetrievedAirplane = await AirplaneService.getAirplaneById(id);
-    const SuccessResponse = { ...Success }
-    SuccessResponse.message = "Airplane found!";
-    SuccessResponse.data = RetrievedAirplane;
+    const SuccessResponse = { ...Success,
+      message: "Airplane found!",
+      data: RetrievedAirplane
+    }
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    const ErrorResponse = { ...Error }
-    ErrorResponse.error.message = error.message;
-    ErrorResponse.error.StatusCode = error.StatusCode;
-    return res.status(error.StatusCode).json(ErrorResponse);
+    const ErrorResponse = { ...Error,
+      message: "Unable to retrieve the Airplane",
+      error: {
+        message: error.message,
+        StatusCode: error.StatusCode
+      }
+    }
+    return res.status(error.StatusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+    .json(ErrorResponse);
   }
 }
 

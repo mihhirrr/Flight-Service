@@ -17,12 +17,10 @@ class FlightRepository extends CrudFunctions {
       const flight = await flights.findByPk(id, {
         include: includeQuery,
       });
+      if(!flight) throw new AppError('Flight not found', StatusCodes.NOT_FOUND);
       return flight;
     } catch (error) {
-      throw new AppError(
-        'There was an error while retrieving the flights',
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      throw error;
     }
   }
 

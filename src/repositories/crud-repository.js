@@ -9,7 +9,6 @@ class CrudFunctions {
   async create(data) {
     try {
       const response = await this.model.create(data);
-      console.log(data);
       return response;
     } catch (error) {
       throw error;
@@ -43,13 +42,13 @@ class CrudFunctions {
     }
   }
 
-  async update(id, data) {
+  async update(id, data, transaction) {
     try {
       const response = await this.model.update(data, {
         where: {
           id,
         },
-      });
+      }, transaction);
       if (!response[0]) {
         throw new AppError(
           `Resource not found for the ID ${id}`,

@@ -4,7 +4,7 @@ const ServerConfig = require('./config/server-config.js');
 const { AirplaneRouter, CityRouter, AirportRouter , FlightRouter, SeatsRouter} = require("./routes/index.js");
   
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/airplanes", AirplaneRouter);
 app.use("/api/cities", CityRouter);
