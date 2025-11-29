@@ -2,6 +2,17 @@ const { AirplaneService } = require("../services");
 const { StatusCodes } = require("http-status-codes");
 const { Error, Success } = require("../utils/common-utils");
 
+//test route->
+
+async function getAirplaneRoute(req, res, next) {
+  res.json({
+        message:"Flight Service route is functional."
+  })
+}
+
+//test route end ^^
+
+
 async function createAirplane(req, res, next) {
   const { ModelNo, Capacity } = req.body;
 
@@ -132,4 +143,5 @@ module.exports = {
   deleteAirplane,
   getAllAirplanes,
   getAirplaneById,
+  getAirplaneRoute
 };
