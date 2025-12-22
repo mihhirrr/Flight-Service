@@ -67,16 +67,20 @@ const getFlights = async (query) => {
 
 const getFlightById = async (id) => {
   try {
-    const RetrievedFlight = await flightsRepository.getFlightsByPk(id, {
+    const joinClassFarespayload = [{
       model: Class_Fare,
       required: true,
       attributes: [ 'travelClass', 'farePrice', 'currency', 'AllowedLuggage']
-    });
+    }]
 
+    const RetrievedFlight = await flightsRepository.getFlightsByPk(id, joinClassFarespayload);
+    console.log(RetrievedFlight)
     return RetrievedFlight;
   } catch (error) {
+    console.log('Reached here')
+    console.log(error.message)
     if(error.StatusCode === StatusCodes.NOT_FOUND)  error.message = 'Flight not found!';
-    throw new AppError(error.message || 'There was a problem while creating the flight', error.StatusCode);
+    throw new AppError(error.message || 'There was a problem while fetching the flight', error.StatusCode);
   }
 };
 
