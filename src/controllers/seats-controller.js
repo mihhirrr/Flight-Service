@@ -5,13 +5,13 @@ const { Error, Success } = require("../utils/common-utils");
 const { Enums } = require('../utils/common-utils')
 const { BOOKED } = Enums.SeatStatus;
 
-async function udpateSeats(req, res, next){
+async function updateSeats(req, res, next){
       const seats = req.body.seats;
       const BookingId = req.body.BookingId || null;
       const status = req.body.status || BOOKED;
  
       try {
-            await SeatService.udpateSeatStatus(seats, BookingId, status);
+            await SeatService.updateSeatStatus(seats, BookingId, status);
             const SuccessResponse = { 
                   ...Success,
                   message: 'Seats Updated!',
@@ -30,5 +30,5 @@ async function udpateSeats(req, res, next){
 
 
 module.exports = {
-      udpateSeats
+      updateSeats
 }
