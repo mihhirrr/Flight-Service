@@ -10,7 +10,7 @@ app.use("/api/airplanes", AirplaneRouter);
 app.use("/api/cities", CityRouter);
 app.use("/api/airports", AirportRouter);
 app.use("/api/flights", FlightRouter);
-app.use("/api/seats", SeatsRouter)        // Working on Seats routes to update in case of booking confirmation / cancellation
+// app.use("/api/seats", SeatsRouter)        // Working on Seats routes to update in case of booking confirmation / cancellation , Skiping for now will fix the logic later
 
 app.listen(ServerConfig.PORT, async () => {
   console.log("Server is listening on port " + ServerConfig.PORT);

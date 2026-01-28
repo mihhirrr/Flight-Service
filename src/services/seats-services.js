@@ -4,15 +4,16 @@ const { Op } = require('sequelize')
 
 const seatRepository = new SeatRepository()
 
-async function udpateSeatStatus(seats, BookingId, status){
+async function updateSeatStatus(seats, BookingId, status){
       
       const t = await db.sequelize.transaction();
 
       try {
+            console.log(seats)
             const data = { status, BookingId }
-            const seatIds = { id: {
-            [Op.in]: seats,
-            }}
+            const seatIds = [{ id: {
+            [Op.in]: [seats],
+            }}]
 
             await seatRepository.update(data, seatIds, t)
 
@@ -20,12 +21,12 @@ async function udpateSeatStatus(seats, BookingId, status){
             return 'Seats Booked!'
 
       } catch (error) {
-
+            console.log(error)
             t.rollback();
             throw error
       }
 }
 
 module.exports = {      
-      udpateSeatStatus
+      updateSeatStatus
 }
